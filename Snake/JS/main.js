@@ -20,21 +20,26 @@ let game = {
 	},
 
 	preload(callback) {
-		//Динамически создаем аналог тега <img>
-		this.sprites.background = new Image();
-		//Используя свойство, подключаем нужную картинку
-		this.sprites.background.src = "IMG/background.png";
+		let loaded = 0;//счетчик загруженных картинок
+		let required = 2;//сколько картинок нужно загрузить всего
 
-		this.sprites.cell = new Image();
-		this.sprites.cell.src = "IMG/cell.png";
-		//При полной загрузке картинки будет выполнена отрисовка на странице
-		this.background.addEventListener("load", () => {
-			/*такая запись сработает только со стрелочными функциями(ES6)
-			При передаче обычной функции контекст this будет другим
-			и вызов метода не сработает*/
-			this.run();
-		});
-		callback();
+		//функция выполняется каждый раз при загрузке нового спрайта
+		let onAssetLoad = () => {
+			++loaded;
+			if (loaded >= required) {
+				callback();
+			}
+		};
+		for (let key in this.sprites) {
+			//Динамически создаем аналог тега <img>
+			this.sprites[key] = new Image();
+			//Используя свойство, подключаем нужную картинку
+			this.sprites[key].src = `IMG/${key}.png`;
+
+			//При полной загрузке картинок будет выполнена отрисовка на странице
+			this.sprites[key].addEventListener("load", onAssetLoad);
+		}
+
 	},
 
 	run() {
@@ -44,7 +49,9 @@ let game = {
 			/*Передаем картинку в контекст с координатами х=0 и у=0
 			началом оси координат считается верхний левый угол канваса.
 			*/
-			this.ctx.drawImage(this.background, 0, 0);
+			this.ctx.drawImage(this.sprites.background, 0, 0);
+			this.ctx.drawImage(this.sprites.cell, 320, 180);
+
 		});
 	}
 };
