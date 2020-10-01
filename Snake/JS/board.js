@@ -1,0 +1,42 @@
+"use strict";
+
+//создаем объект board, который будет свойством объекта game
+game.board = {
+	game: game,
+	size: 15,//Размер доски
+	cells: [],//массив ячеек
+
+
+	create() {
+		this.createCells();
+	},
+
+	createCells() {
+		for (let row = 0; row < this.size; row++) {
+			for (let col = 0; col < this.size; col++) {
+				this.cells.push(this.createCell(row, col));
+			}
+		}
+	},
+
+	createCell(row, col) {
+		let cellSize = this.game.sprites.cell.width + 1;
+		//Задали ширину ячейки с отступом 1 пиксель
+
+		//Задаем отступы по краям (в данном случае центрируем по канвасу)
+		let offSetX = (this.game.width - cellSize * this.size) / 2;
+		let offSetY = (this.game.height - cellSize * this.size) / 2;
+
+		return {
+			row: row,
+			col: col,
+			x: offSetX + cellSize * col,
+			y: offSetY + cellSize * row
+		};
+	},
+	render() {
+		this.cells.forEach(cell => {
+			this.game.ctx.drawImage(this.game.sprites.cell, cell.x, cell.y);
+		});
+	},
+};
