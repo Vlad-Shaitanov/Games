@@ -11,7 +11,7 @@ game.board = {
 		this.createCells();
 	},
 
-	createCells() {
+	createCells() {//Создаем массив ячеек
 		for (let row = 0; row < this.size; row++) {
 			for (let col = 0; col < this.size; col++) {
 				this.cells.push(this.createCell(row, col));
@@ -19,7 +19,7 @@ game.board = {
 		}
 	},
 
-	createCell(row, col) {
+	createCell(row, col) {//Создаем ячейки с координатами
 		let cellSize = this.game.sprites.cell.width + 1;
 		//Задали ширину ячейки с отступом 1 пиксель
 
@@ -34,7 +34,12 @@ game.board = {
 			y: offSetY + cellSize * row
 		};
 	},
-	render() {
+
+	getCell(row, col) {
+		return this.cells.find(cell => cell.row === row && cell.col === col);
+	},
+
+	render() {//Рисуем поле
 		this.cells.forEach(cell => {
 			this.game.ctx.drawImage(this.game.sprites.cell, cell.x, cell.y);
 		});

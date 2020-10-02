@@ -11,6 +11,7 @@ let game = {
 	sprites: {
 		background: null,
 		cell: null,
+		body: null,
 	},
 	start() {
 		this.init();
@@ -52,6 +53,7 @@ let game = {
 
 	run() {
 		this.board.create();
+		this.snake.create();
 		/*указываем браузеру на то, что нужно произвести анимацию, и просим его
 			запланировать перерисовку на следующем кадре анимации*/
 		window.requestAnimationFrame(() => {
@@ -60,6 +62,7 @@ let game = {
 			*/
 			this.ctx.drawImage(this.sprites.background, 0, 0);
 			this.board.render();
+			this.snake.render();
 		});
 	}
 };
