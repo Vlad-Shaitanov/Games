@@ -6,8 +6,21 @@ let game = {
 	canvas: null,
 	ctx: null,
 	board: null,
-	width: 640,
-	height: 360,
+	width: 0,
+	height: 0,
+	dimensions: {//Размеры игры
+		//Максимальный размер отрисовки
+		max: {
+			width: 640,
+			height: 360,
+		},
+		/*минимальный размер, при котором будет отрисовываться канвас.
+		В данном случае размер ячейки (18рх ячейка +1 рх отступ) * на размер поля*/
+		min: {
+			width: 300,
+			height: 300,
+		}
+	},
 	sprites: {
 		background: null,
 		cell: null,
@@ -22,11 +35,43 @@ let game = {
 	},
 
 	init() {
-		//Инициализация переменных
+		//Предыгровая инициализация переменных
 		this.canvas = document.querySelector("#canvas");
 		this.ctx = this.canvas.getContext("2d");
+		this.initDimensions();
 	},
 
+	initDimensions() {//Расчет одной из сторон
+		let data = {//Парамметры для расчета
+			maxWidth: this.dimensions.max.width,
+			maxHeight: this.dimensions.max.height,
+			minWidth: this.dimensions.min.width,
+			minHeight: this.dimensions.min.height,
+			//Реальные размеры экрана устройства
+			realWidth: window.innerWidth,
+			realHeight: window.innerHeight,
+		};
+
+		this.fitHeight(data);
+
+		//Динамическое определение размера канваса
+		this.canvas.width = this.width;
+		this.canvas.height = this.height;
+	},
+
+	fitHeight(data) {//Растягивание по высоте
+
+		/*Соотношение сторон
+		realWidth / realHeight так же как и resultWidth / maxHeight*/
+		this.width = Math.floor(data.realWidth * data.maxHeight / data.realHeight);
+		this.width = Math.min(this.width, data.maxWidth);
+		//Выберет мин. значение между подсчитанной шириной и data.maxWidth
+		this.width = Math.max(this.width, data.minWidth);
+
+		this.height = Math.floor(this.width * data.realHeight / data.realWidth);
+		this.canvas.style.height = "100%";
+
+	},
 
 	preload(callback) {
 		let loaded = 0;//счетчик загруженных картинок
@@ -60,7 +105,8 @@ let game = {
 			/*Передаем картинку в контекст с координатами х=0 и у=0
 			началом оси координат считается верхний левый угол канваса.
 			*/
-			this.ctx.drawImage(this.sprites.background, 0, 0);
+			this.ctx.drawImage(this.sprites.background,
+				(this.width - this.sprites.background.width) / 2, (this.height - this.sprites.background.height) / 2);
 			this.board.render();
 			this.snake.render();
 		});
