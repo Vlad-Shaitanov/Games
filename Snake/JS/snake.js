@@ -41,10 +41,25 @@ game.snake = {
 		}
 	},
 
+	renderHead() {
+		//Получить голову
+		let head = this.cells[0];
+		//Отрисовать голову
+		this.game.ctx.drawImage(this.game.sprites.head, head.x, head.y);
+	},
+
+	renderBody() {
+		for (let i = 1; i < this.cells.length; i++) {
+			//Проходим цикл, начиная с 1, чтобы избежать ячейки с головой
+			this.game.ctx.drawImage(this.game.sprites.body,
+				this.cells[i].x, this.cells[i].y);
+		}
+	},
+
 	render() {//Рисуем поле
-		this.cells.forEach(cell => {
-			this.game.ctx.drawImage(this.game.sprites.body, cell.x, cell.y);
-		});
+		this.renderHead();
+		this.renderBody();
+
 	},
 
 	start(keyCode) {//старт движения змейки

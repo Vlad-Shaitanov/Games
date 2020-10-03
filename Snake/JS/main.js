@@ -25,6 +25,7 @@ let game = {
 		//Название своуства соответствует названию файла .png
 		background: null,
 		cell: null,
+		head: null,
 		body: null,
 		food: null,
 	},
