@@ -35,6 +35,14 @@ game.board = {
 		};
 	},
 
+	createFood() {//Получение ячейки для яблока
+		//Получить случайную доступную ячейку
+		let cell = this.cells[0];
+		//Установить флаг hasFood
+		cell.hasFood = true;
+		console.log("Food");
+	},
+
 	getCell(row, col) {
 		return this.cells.find(cell => cell.row === row && cell.col === col);
 	},
@@ -42,6 +50,9 @@ game.board = {
 	render() {//Рисуем поле
 		this.cells.forEach(cell => {
 			this.game.ctx.drawImage(this.game.sprites.cell, cell.x, cell.y);
+			if (cell.hasFood) {
+				this.game.ctx.drawImage(this.game.sprites.food, cell.x, cell.y);
+			}
 		});
 	},
 };

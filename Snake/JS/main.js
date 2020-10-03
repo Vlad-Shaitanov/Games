@@ -22,9 +22,11 @@ let game = {
 		}
 	},
 	sprites: {
+		//Название своуства соответствует названию файла .png
 		background: null,
 		cell: null,
 		body: null,
+		food: null,
 	},
 	start() {
 		this.init();
@@ -115,6 +117,7 @@ let game = {
 		//создание игровых объектов
 		this.board.create();
 		this.snake.create();
+		this.board.createFood();
 
 		//Установка игровых событий
 		window.addEventListener("keydown", (event) => {
