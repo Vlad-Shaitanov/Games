@@ -111,20 +111,45 @@ let game = {
 		}
 	},
 
-	run() {
+	create() {
+		//создание игровых объектов
 		this.board.create();
 		this.snake.create();
+	},
+
+	render() {
 		/*указываем браузеру на то, что нужно произвести анимацию, и просим его
-			запланировать перерисовку на следующем кадре анимации*/
+					запланировать перерисовку на следующем кадре анимации*/
 		window.requestAnimationFrame(() => {
 			/*Передаем картинку в контекст с координатами х=0 и у=0
 			началом оси координат считается верхний левый угол канваса.
 			*/
+			//Перед тем, как отрисовать новый кадр, нужно очистить предыдущий
+			//Очистка игрового поля в новом кадре
+			this.ctx.clearRect(0, 0, this.width, this.height);
+			//Рисуем кадр с учетом обновленного состояния
 			this.ctx.drawImage(this.sprites.background,
 				(this.width - this.sprites.background.width) / 2, (this.height - this.sprites.background.height) / 2);
 			this.board.render();
 			this.snake.render();
 		});
+	},
+
+	update() {
+		//Двигать змею
+		this.snake.move();
+		//Отрисовывать новый кадр
+		this.render();
+	},
+
+	run() {
+		this.create();
+
+		setInterval(() => {//каждые 150милисек.
+			this.update();
+		}, 150);
+
+		this.render();
 	}
 };
 game.start();
