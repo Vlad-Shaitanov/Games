@@ -4,6 +4,7 @@
 game.snake = {
 	game: game,
 	cells: [],//массив ячеек
+	moving: false,//движение змейки
 
 	create() {//создание змейки
 		//стартовая позиция змейки
@@ -25,7 +26,14 @@ game.snake = {
 		});
 	},
 
+	start() {//старт движения змейки
+		this.moving = true;
+	},
+
 	move() {
+		if (!this.moving) {
+			return;
+		}
 		//Получаем следующую ячейку
 		let cell = this.getNextCell();
 		//Если такая ячейка есть

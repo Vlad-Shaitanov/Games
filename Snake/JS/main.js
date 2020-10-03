@@ -115,6 +115,11 @@ let game = {
 		//создание игровых объектов
 		this.board.create();
 		this.snake.create();
+
+		//Установка игровых событий
+		window.addEventListener("keydown", () => {
+			this.snake.start();
+		});
 	},
 
 	render() {
