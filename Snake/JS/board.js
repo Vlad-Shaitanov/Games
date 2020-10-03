@@ -35,9 +35,17 @@ game.board = {
 		};
 	},
 
+	getRandomAvailableCell() {//Получение рандомной ячейки для яблока
+		//Проверяем, не занята ли ячейка змейкой
+		let pool = this.cells.filter(cell => !this.game.snake.hasCell(cell));
+		let index = this.game.random(0, pool.length - 1);
+		return pool[index];
+	},
+
 	createFood() {//Получение ячейки для яблока
 		//Получить случайную доступную ячейку
-		let cell = this.cells[0];
+
+		let cell = this.getRandomAvailableCell();
 		//Установить флаг hasFood
 		cell.hasFood = true;
 		console.log("Food");

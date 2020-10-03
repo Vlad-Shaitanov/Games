@@ -83,6 +83,11 @@ game.snake = {
 
 	},
 
+	hasCell(cell) {
+		//Проверяем, находится ли нужная нам ячейка в массиве с ячейками для змейки
+		return this.cells.find(part => part === cell);
+	},
+
 	getNextCell() {
 		let head = this.cells[0];//Координаты головы
 
