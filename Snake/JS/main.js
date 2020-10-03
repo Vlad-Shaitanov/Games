@@ -117,8 +117,8 @@ let game = {
 		this.snake.create();
 
 		//Установка игровых событий
-		window.addEventListener("keydown", () => {
-			this.snake.start();
+		window.addEventListener("keydown", (event) => {
+			this.snake.start(event.keyCode);
 		});
 	},
 

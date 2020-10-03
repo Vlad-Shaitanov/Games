@@ -5,12 +5,33 @@ game.snake = {
 	game: game,
 	cells: [],//массив ячеек
 	moving: false,//движение змейки
+	direction: false,
+	directions: {//Направления движения
+		up: {
+			row: -1,
+			col: 0,
+		},
+		down: {
+			row: 1,
+			col: 0,
+		},
+		left: {
+			row: 0,
+			col: -1,
+		},
+		right: {
+			row: 0,
+			col: 1,
+		},
+	},
 
 	create() {//создание змейки
 		//стартовая позиция змейки
 		let startCells = [
 			{ row: 7, col: 7 }, { row: 8, col: 7 }
 		];
+
+		this.direction = this.directions.up;//Направление
 
 		for (let startCell of startCells) {
 			/*ищем в массиве cells ячейки, соответствующие
@@ -26,7 +47,22 @@ game.snake = {
 		});
 	},
 
-	start() {//старт движения змейки
+	start(keyCode) {//старт движения змейки
+		console.log(keyCode);
+		switch (keyCode) {
+			case 38:
+				this.direction = this.directions.up;
+				break;
+			case 40:
+				this.direction = this.directions.down;
+				break;
+			case 37:
+				this.direction = this.directions.left;
+				break;
+			case 39:
+				this.direction = this.directions.right;
+				break;
+		}
 		this.moving = true;
 	},
 
@@ -49,8 +85,9 @@ game.snake = {
 
 	getNextCell() {
 		let head = this.cells[0];//Координаты головы
-		let row = head.row - 1;//Координаты новой строки
-		let col = head.col;//Координаты нового столбца
+
+		let row = head.row + this.direction.row;//Координаты новой строки
+		let col = head.col + this.direction.col;//Координаты нового столбца
 
 		return this.game.board.getCell(row, col);
 		/*Координаты новвой ячейки для следующего шага*/
