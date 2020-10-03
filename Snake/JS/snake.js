@@ -77,8 +77,15 @@ game.snake = {
 			//Добавить новую ячейку в snake.cells
 			this.cells.unshift(cell);
 			//this.cells[0] - голова змеи(первый элемент массива)
-			//Удалить последнюю ячейку из snake.cells
-			this.cells.pop(cell);
+
+			if (!this.game.board.isFoodCell(cell)) {
+				//Если новая ячейка НЕ является яблоком
+				//Удалить последнюю ячейку из snake.cells, если она не food
+				this.cells.pop(cell);
+			} else {
+				//Если новая ячейка является яблоком
+				this.game.board.createFood();
+			}
 		}
 
 	},

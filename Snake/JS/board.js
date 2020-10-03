@@ -43,12 +43,20 @@ game.board = {
 	},
 
 	createFood() {//Получение ячейки для яблока
+		//Получить текущее яблоко и обнулить флаг
+		let cell = this.cells.find(cell => cell.hasFood);
+		if (cell) {
+			cell.hasFood = false;
+		}
 		//Получить случайную доступную ячейку
-
-		let cell = this.getRandomAvailableCell();
+		cell = this.getRandomAvailableCell();
 		//Установить флаг hasFood
 		cell.hasFood = true;
 		console.log("Food");
+	},
+
+	isFoodCell(cell) {
+		return cell.hasFood;
 	},
 
 	getCell(row, col) {
