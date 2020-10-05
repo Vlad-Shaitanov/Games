@@ -36,27 +36,39 @@ game.board = {
 	},
 
 	getRandomAvailableCell() {//Получение рандомной ячейки для яблока
-		//Проверяем, не занята ли ячейка змейкой
-		let pool = this.cells.filter(cell => !this.game.snake.hasCell(cell));
+		//Проверяем, не занята ли ячейка змейкой, яблоком или бомбой
+		let pool = this.cells.filter(cell => !cell.hasFood &&
+			!cell.hasBomb && !this.game.snake.hasCell(cell));
 		let index = this.game.random(0, pool.length - 1);
 		return pool[index];
 	},
 
-	createFood() {//Получение ячейки для яблока
-		//Получить текущее яблоко и обнулить флаг
-		let cell = this.cells.find(cell => cell.hasFood);
+	createCellObject(type) {
+		//Получить текущую ячейку с данным объектом
+		let cell = this.cells.find(cell => cell.type === type);
 		if (cell) {
-			cell.hasFood = false;
+			cell.type = false;//Обнуление типа ячейки
 		}
-		//Получить случайную доступную ячейку
+		//Получить случайную доступную ячейку для нового объекта
 		cell = this.getRandomAvailableCell();
-		//Установить флаг hasFood
-		cell.hasFood = true;
-		console.log("Food");
+		//Установить поле нового объекта
+		cell.type = type;
 	},
 
-	isFoodCell(cell) {
-		return cell.hasFood;
+	createFood() {//Получение ячейки для яблока
+		this.createCellObject("food");
+	},
+
+	createBomb() {//Получение ячейки для бомбы
+		this.createCellObject("bomb");
+	},
+
+	isFoodCell(cell) {//Проверка флага hasFood
+		return cell.type === "food";
+	},
+
+	isBombCell(cell) {//Проверка флага hasBomb
+		return cell.type === "bomb";
 	},
 
 	getCell(row, col) {
@@ -66,8 +78,8 @@ game.board = {
 	render() {//Рисуем поле
 		this.cells.forEach(cell => {
 			this.game.ctx.drawImage(this.game.sprites.cell, cell.x, cell.y);
-			if (cell.hasFood) {
-				this.game.ctx.drawImage(this.game.sprites.food, cell.x, cell.y);
+			if (cell.type) {
+				this.game.ctx.drawImage(this.game.sprites[cell.type], cell.x, cell.y);
 			}
 		});
 	},

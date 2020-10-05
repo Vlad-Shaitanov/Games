@@ -28,6 +28,7 @@ let game = {
 		head: null,
 		body: null,
 		food: null,
+		bomb: null,
 	},
 
 	random(min, max) {
@@ -123,6 +124,7 @@ let game = {
 		this.board.create();
 		this.snake.create();
 		this.board.createFood();
+		this.board.createBomb();
 
 		//Установка игровых событий
 		window.addEventListener("keydown", (event) => {
@@ -161,6 +163,13 @@ let game = {
 		setInterval(() => {//каждые 150милисек.
 			this.update();
 		}, 150);
+
+		setInterval(() => {//каждые 5с бомба меняет местоположение на доске
+			if (this.snake.moving) {
+				//Отстчет начинается только если змейка начала движение
+				this.board.createBomb();
+			}
+		}, 5000);
 
 		this.render();
 	}
