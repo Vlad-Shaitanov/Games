@@ -17,3 +17,12 @@ canvas {
 
 	transform: translate(-50%, -50%);
 }
+@font-face {
+	font-family: "SuperMario";
+	src: url("../FONTS/SuperMario256.ttf") format("truetype");
+}
+.fontPreload {
+	font-family: "SuperMario";
+	position: absolute;
+	left: -100px;
+}

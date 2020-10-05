@@ -58,7 +58,7 @@ let game = {
 	},
 
 	setTextFont() {//Настройка поля очков игрока
-		this.ctx.font = "20px Arial";
+		this.ctx.font = "20px SuperMario";
 		this.ctx.fillStyle = "#ffffff";
 	},
 
@@ -230,4 +230,8 @@ let game = {
 	},
 
 };
-game.start();
+
+window.addEventListener("load", () => {
+	//Старт игры только при полной загрузке структуры HTML
+	game.start();
+});
