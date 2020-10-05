@@ -202,10 +202,21 @@ let game = {
 	},
 
 	stop() {
+		this.sounds.bomb.play();
 		clearInterval(this.gameInterval);//Сброс интервала
 		clearInterval(this.bombInterval);//Сброс интервала бомбы
 		alert("ИГРА ОКОНЧЕНА");
 		window.location.reload();//Обновление окна после проигрыша
 	},
+
+	onSnakeStart() {//Действия при начале движения змеи
+		this.sounds.theme.loop = true;//Зациклили звук
+		this.sounds.theme.play();
+	},
+	onSnakeEat() {//Действия при поедании яблока
+		this.sounds.food.play();
+		this.board.createFood();
+	},
+
 };
 game.start();

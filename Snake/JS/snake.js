@@ -95,6 +95,10 @@ game.snake = {
 				this.direction = this.directions.right;
 				break;
 		}
+		if (!this.moving) {
+			//Если змейка стоит и флаг меняется в первый раз, то запустить
+			this.game.onSnakeStart();
+		}
 		this.moving = true;
 	},
 
@@ -120,7 +124,7 @@ game.snake = {
 				this.cells.pop(cell);
 			} else {
 				//Если новая ячейка является яблоком
-				this.game.board.createFood();
+				this.game.onSnakeEat();
 			}
 		}
 
