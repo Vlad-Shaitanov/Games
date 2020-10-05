@@ -104,8 +104,12 @@ game.snake = {
 		}
 		//Получаем следующую ячейку
 		let cell = this.getNextCell();
-		//Если такая ячейка есть
-		if (cell) {
+		/*Если след. ячейка выходит за пределы доски или
+		является частью змейки или является бомбой*/
+		if (!cell || this.hasCell(cell) || this.game.board.isBombCell(cell)) {
+			//Необходимо остановить игру
+			this.game.stop();
+		} else {//Если такая ячейка есть
 			//Добавить новую ячейку в snake.cells
 			this.cells.unshift(cell);
 			//this.cells[0] - голова змеи(первый элемент массива)

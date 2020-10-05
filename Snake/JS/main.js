@@ -160,11 +160,12 @@ let game = {
 	run() {
 		this.create();
 
-		setInterval(() => {//каждые 150милисек.
+		this.gameInterval = setInterval(() => {//каждые 150милисек.
 			this.update();
 		}, 150);
 
-		setInterval(() => {//каждые 5с бомба меняет местоположение на доске
+		this.bombInterval = setInterval(() => {
+			//каждые 5с бомба меняет местоположение на доске
 			if (this.snake.moving) {
 				//Отстчет начинается только если змейка начала движение
 				this.board.createBomb();
@@ -172,6 +173,13 @@ let game = {
 		}, 5000);
 
 		this.render();
-	}
+	},
+
+	stop() {
+		clearInterval(this.gameInterval);//Сброс интервала
+		clearInterval(this.bombInterval);//Сброс интервала бомбы
+		alert("ИГРА ОКОНЧЕНА");
+		window.location.reload();//Обновление окна после проигрыша
+	},
 };
 game.start();
