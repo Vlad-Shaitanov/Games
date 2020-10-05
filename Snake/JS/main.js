@@ -31,6 +31,12 @@ let game = {
 		bomb: null,
 	},
 
+	sounds: {
+		bomb: null,
+		food: null,
+		theme: null,
+	},
+
 	random(min, max) {
 		return Math.floor(Math.random() * (max + 1 - min)) + min;
 	},
@@ -97,8 +103,10 @@ let game = {
 	},
 
 	preload(callback) {
-		let loaded = 0;//счетчик загруженных картинок
-		let required = Object.keys(this.sprites).length;//сколько картинок нужно загрузить всего
+		let loaded = 0;//счетчик загруженных спрайтов
+		//сколько спрайтов нужно загрузить всего
+		let required = Object.keys(this.sprites).length +
+			Object.keys(this.sounds).length;
 
 		//функция выполняется каждый раз при загрузке нового спрайта
 		let onAssetLoad = () => {
@@ -108,6 +116,12 @@ let game = {
 				callback();
 			}
 		};
+		this.preloadSprites(onAssetLoad);
+		this.preloadSounds(onAssetLoad);
+
+	},
+
+	preloadSprites(onAssetLoad) {
 		for (let key in this.sprites) {
 			//Динамически создаем аналог тега <img>
 			this.sprites[key] = new Image();
@@ -116,6 +130,18 @@ let game = {
 
 			//При полной загрузке картинок будет выполнена отрисовка на странице
 			this.sprites[key].addEventListener("load", onAssetLoad);
+		}
+	},
+	preloadSounds(onAssetLoad) {
+		for (let key in this.sounds) {
+			//Динамически создаем аналог тега <audio>
+			this.sounds[key] = new Audio();
+			//Используя свойство, подключаем нужный звук
+			this.sounds[key].src = `SOUNDS/${key}.mp3`;
+
+			//Событие отработает только при полной готовности звуков к воспроизведению
+			this.sounds[key].addEventListener("canplaythrough",
+				onAssetLoad, { once: true });
 		}
 	},
 
