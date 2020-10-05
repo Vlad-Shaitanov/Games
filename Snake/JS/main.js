@@ -8,6 +8,7 @@ let game = {
 	board: null,
 	width: 0,
 	height: 0,
+	score: 0,//Счетчик очков
 	dimensions: {//Размеры игры
 		//Максимальный размер отрисовки
 		max: {
@@ -53,6 +54,12 @@ let game = {
 		this.canvas = document.querySelector("#canvas");
 		this.ctx = this.canvas.getContext("2d");
 		this.initDimensions();
+		this.setTextFont();
+	},
+
+	setTextFont() {//Настройка поля очков игрока
+		this.ctx.font = "20px Arial";
+		this.ctx.fillStyle = "#ffffff";
 	},
 
 	initDimensions() {//Расчет одной из сторон
@@ -173,6 +180,9 @@ let game = {
 				(this.width - this.sprites.background.width) / 2, (this.height - this.sprites.background.height) / 2);
 			this.board.render();
 			this.snake.render();
+
+			//Вывод панели с очками игрока
+			this.ctx.fillText("Score: " + this.score, 30, 30);
 		});
 	},
 
@@ -214,6 +224,7 @@ let game = {
 		this.sounds.theme.play();
 	},
 	onSnakeEat() {//Действия при поедании яблока
+		++this.score;
 		this.sounds.food.play();
 		this.board.createFood();
 	},
