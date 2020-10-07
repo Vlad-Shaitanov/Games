@@ -37,7 +37,13 @@ let path = {//Содержит пути к файлам и папкам
 let { src, dest } = require("gulp"),
 	gulp = require("gulp"),
 	browsersync = require("browser-sync").create(),
-	fileinclude = require("gulp-file-include");
+	fileinclude = require("gulp-file-include"),
+	del = require("del"),
+	scss = require("gulp-sass"),
+	autoprefixer = require("gulp-autoprefixer"),
+	groupmedia = require("gulp-group-css-media-queries"),
+	cleancss = require("gulp-clean-css"),
+	rename = require("gulp-rename");
 
 function browserSync(param) {//Работа браузера
 	browsersync.init({//Инициализация обновления браузера
@@ -62,14 +68,49 @@ function html() {//Обработка htmll
 		.pipe(browsersync.stream());//Обновление страницы
 }
 
+function css(param) {//Обработка css
+	return src(path.src.css)
+		.pipe(
+			scss({//Настройка обработки scss
+				outputStyle: "expanded",//Расширенный файл
+			})
+		)
+		.pipe(
+			groupmedia()//группировка медиазапросов
+		)
+		.pipe(
+			autoprefixer({//Настройки вендорных автопрефиксов
+				//Последние 5 версий браузеров
+				overrideBrowserslist: ["last 5 versions"],
+				//Каскадный вывод
+				cascade: true,
+			})
+		)
+		.pipe(dest(path.build.css))//Выгрузка результата
+		.pipe(cleancss())//Очистка и сжатие css
+		.pipe(
+			rename({
+				extname: ".min.css"
+			})
+		)
+		/*Создает поток для записи объектов в файловую систему.*/
+		.pipe(dest(path.build.css))//Выгрузка минифицированного результата
+		.pipe(browsersync.stream());//Обновление страницы
+}
+
 function watchFiles(param) {//Следит за обновление файлов
 	gulp.watch([path.watch.html], html);//Слежка за html
+	gulp.watch([path.watch.css], css);//Слежка за scss
+}
+
+function clean(param) {//Автоочистка директории с готовым проектом
+	return del(path.clean);
 }
 
 /*Объединяет функции задач и/или составные операции в более крупные, которые
 выполняются последовательно. Нет никаких ограничений на глубину вложенности
 составных операций*/
-let build = gulp.series(html);
+let build = gulp.series(clean, gulp.parallel(css, html));
 
 /*Объединяет функции задач и/или составные операции в более крупные,
 которые выполняются одновременно (параллельно).
@@ -77,6 +118,7 @@ let build = gulp.series(html);
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 //При запуске Gulp будут выполняться эти переменные по умолчанию
+exports.css = css;
 exports.html = html;
 exports.build = build;
 exports.watch = watch;
