@@ -10,7 +10,7 @@ body {
 	font-size: 16px;
 	background-color: #8cf1c2;
 
-	display: flex;
+	display: block;
 }
 span {
 	font-size: 20px;
@@ -20,6 +20,7 @@ span {
 }
 div {
 	font-size: 30px;
+	background: url("../img/canada.jpg") 0 0 no-repeat;
 	@media (max-width: 767px) {
 		font-size: 20px;
 	}

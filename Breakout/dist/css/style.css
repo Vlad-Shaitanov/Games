@@ -11,9 +11,7 @@
 body {
   font-size: 16px;
   background-color: #8cf1c2;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
+  display: block;
 }
 
 span {
@@ -22,6 +20,7 @@ span {
 
 div {
   font-size: 30px;
+  background: url("../img/canada.jpg") 0 0 no-repeat;
 }
 
 @media (max-width: 767px) {
@@ -33,3 +32,5 @@ div {
     font-size: 20px;
   }
 }
+
+.webp div { background: url(../img/canada.webp) 0 0 no-repeat; }
