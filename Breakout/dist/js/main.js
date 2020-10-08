@@ -1,4 +1,4 @@
-alert("Good morning!");
+// alert("Good morning!");
 
 //JS-функция определения поддержки WebP
 function testWebP(callback) {

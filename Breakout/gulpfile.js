@@ -180,8 +180,24 @@ gulp.task("svgSprite", function () {//Создание спрайтов
 		.pipe(dest(path.build.img));
 });
 
-function fontsStyle(param) {
-
+function fontsStyle(param) {//Подключение шрифтов к scss-файлу
+	let file_content = fs.readFileSync(sourceFolder + '/scss/fonts.scss');
+	if (file_content == '') {
+		fs.writeFile(sourceFolder + '/scss/fonts.scss', '', cb);
+		return fs.readdir(path.build.fonts, function (err, items) {
+			if (items) {
+				let c_fontname;
+				for (var i = 0; i < items.length; i++) {
+					let fontname = items[i].split('.');
+					fontname = fontname[0];
+					if (c_fontname != fontname) {
+						fs.appendFile(sourceFolder + '/scss/fonts.scss', '@include font("' + fontname + '", "' + fontname + '", "400", "normal");\r\n', cb);
+					}
+					c_fontname = fontname;
+				}
+			}
+		})
+	}
 }
 
 function cb() {
@@ -202,7 +218,7 @@ function clean(param) {//Автоочистка директории с гото
 /*Объединяет функции задач и/или составные операции в более крупные, которые
 выполняются последовательно. Нет никаких ограничений на глубину вложенности
 составных операций*/
-let build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts));
+let build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts), fontsStyle);
 
 /*Объединяет функции задач и/или составные операции в более крупные,
 которые выполняются одновременно (параллельно).
@@ -210,6 +226,7 @@ let build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts));
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 //При запуске Gulp будут выполняться эти переменные по умолчанию
+exports.fontsStyle = fontsStyle;
 exports.fonts = fonts;
 exports.images = images;
 exports.js = js;
