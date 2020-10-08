@@ -2,6 +2,8 @@
 let projectFolder = "dist";//Папка для выгрузки(готовый проект)
 let sourceFolder = "#src";//Папка с исходниками
 
+let fs = require("fs");//file sistem
+
 let path = {//Содержит пути к файлам и папкам
 
 	build: {//Пути вывода уже обработанных файлов
@@ -48,7 +50,11 @@ let { src, dest } = require("gulp"),
 	imagemin = require("gulp-imagemin"),
 	webp = require("gulp-webp"),
 	webphtml = require("gulp-webp-html"),
-	webpcss = require("gulp-webpcss");
+	webpcss = require("gulp-webpcss"),
+	svgSprite = require("gulp-svg-sprite"),
+	ttf2woff = require("gulp-ttf2woff"),
+	ttf2woff2 = require("gulp-ttf2woff2"),
+	fonter = require("gulp-fonter");
 
 function browserSync(param) {//Работа браузера
 	browsersync.init({//Инициализация обновления браузера
@@ -144,6 +150,44 @@ function images() {//Обработка картинок
 		.pipe(browsersync.stream());//Обновление страницы
 }
 
+function fonts() {
+	src(path.src.fonts)
+		.pipe(ttf2woff())//Конвертация
+		.pipe(dest(path.build.fonts));//Выгрузка результата
+	return src(path.src.fonts)
+		.pipe(ttf2woff2())//Конвертация
+		.pipe(dest(path.build.fonts));//Выгрузка результата
+}
+
+gulp.task("otf2ttf", function () {
+	return gulp.src([sourceFolder + "/fonts/*.otf"])
+		.pipe(fonter({
+			formats: ["ttf"]
+		}))
+		.pipe(dest(sourceFolder + "/fonts/"));
+});
+
+gulp.task("svgSprite", function () {//Создание спрайтов
+	return gulp.src([sourceFolder + "/iconsprite/*.svg"])
+		.pipe(svgSprite({
+			mode: {
+				stack: {
+					sprite: "../icons/icons.svg",//Имя файла
+					//example: true, //Создание html-файла с примерами
+				}
+			}
+		}))
+		.pipe(dest(path.build.img));
+});
+
+function fontsStyle(param) {
+
+}
+
+function cb() {
+
+}
+
 function watchFiles(param) {//Следит за обновление файлов
 	gulp.watch([path.watch.html], html);//Слежка за html
 	gulp.watch([path.watch.css], css);//Слежка за scss
@@ -158,7 +202,7 @@ function clean(param) {//Автоочистка директории с гото
 /*Объединяет функции задач и/или составные операции в более крупные, которые
 выполняются последовательно. Нет никаких ограничений на глубину вложенности
 составных операций*/
-let build = gulp.series(clean, gulp.parallel(js, css, html, images));
+let build = gulp.series(clean, gulp.parallel(js, css, html, images, fonts));
 
 /*Объединяет функции задач и/или составные операции в более крупные,
 которые выполняются одновременно (параллельно).
@@ -166,6 +210,7 @@ let build = gulp.series(clean, gulp.parallel(js, css, html, images));
 let watch = gulp.parallel(build, watchFiles, browserSync);
 
 //При запуске Gulp будут выполняться эти переменные по умолчанию
+exports.fonts = fonts;
 exports.images = images;
 exports.js = js;
 exports.css = css;
