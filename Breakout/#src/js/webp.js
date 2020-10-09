@@ -1,4 +1,3 @@
-"use strict";
 //JS-функция определения поддержки WebP
 function testWebP(callback) {
 
@@ -17,11 +16,3 @@ testWebP(function (support) {
 		document.querySelector('body').classList.add('no-webp');
 	}
 });
-
-let game = {
-	start() {
-		console.log("game started");
-	}
-};
-
-game.start();
