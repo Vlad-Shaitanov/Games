@@ -1,1 +1,1 @@
-*,:after,:before{margin:0;padding:0;border:0;-webkit-box-sizing:border-box;box-sizing:border-box}body{font-size:16px;background-color:#8cf1c2;display:block}span{font-size:20px}div{font-size:30px;background:url(../img/canada.jpg) 0 0 no-repeat}@media (max-width:767px){span{font-size:15px}div{font-size:20px}}.webp div{background:url(../img/canada.webp) 0 0 no-repeat}
+*,:after,:before{margin:0;padding:0;border:0;-webkit-box-sizing:border-box;box-sizing:border-box}#canvas{width:100%}
