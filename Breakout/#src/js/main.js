@@ -1,14 +1,11 @@
 "use strict";
-@@include("webp.js")
-
-
 
 let game = {
 
 	ctx: null,
-	canvas: null,
 	background: null,
 	ball: null,
+	platform: null,
 
 	init() {
 		//Инициализация
@@ -22,6 +19,11 @@ let game = {
 		this.background.src = "img/background.png";
 		this.ball = new Image();
 		this.ball.src = "img/ball.png";
+		this.platform = new Image();
+		this.platform.src = "img/platform.png";
+
+		console.log(this.background);
+		console.log(this.ball);
 	},
 
 	run() {
@@ -36,6 +38,7 @@ let game = {
 		console.log("render");
 		this.ctx.drawImage(this.background, 0, 0);
 		this.ctx.drawImage(this.ball, 0, 0);
+		this.ctx.drawImage(this.platform, 50, 50);
 	},
 
 	start() {
