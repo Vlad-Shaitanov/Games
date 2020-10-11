@@ -18,6 +18,23 @@ let game = {
 		//Инициализация
 		this.canvas = document.querySelector("#canvas");
 		this.ctx = this.canvas.getContext("2d");
+		this.setEvents();
+	},
+
+	setEvents() {
+		window.addEventListener("keydown", (event) => {
+			switch (event.keyCode) {
+				case 37: this.platform.dx = -this.platform.speed;
+					break;
+				case 39: this.platform.dx = this.platform.speed;
+					break;
+			}
+		});
+
+		window.addEventListener("keyup", (event) => {
+			//При отпускании клавиши прекращаем движение платформы
+			this.platform.dx = 0;
+		});
 	},
 
 	preload(callback) {
@@ -50,9 +67,15 @@ let game = {
 		}
 	},
 
-	run() {
+	update() {//Текущее состояние платформы
+		this.platform.move();
+	},
+
+	run() {//Запуск игры
 		window.requestAnimationFrame(() => {
+			this.update();
 			this.render();
+			this.run();//Рекурсия для динамической отрисовки платформы
 		});
 	},
 
@@ -89,8 +112,16 @@ game.ball = {
 };
 
 game.platform = {
+	speed: 6,//Возможная скорость движения платформы
+	dx: 0,//Смещение по оси х в данный момент времени
 	x: 270,
 	y: 300,
+
+	move() {
+		if (this.dx) {//Если платформа движется
+			this.x += this.dx;
+		}
+	},
 };
 
 window.addEventListener("load", () => {
