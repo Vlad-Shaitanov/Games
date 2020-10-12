@@ -3,6 +3,7 @@
 const KEYS = {
 	LEFT: 37,
 	RIGHT: 39,
+	SPACE: 32,
 };
 
 let game = {
@@ -28,7 +29,9 @@ let game = {
 
 	setEvents() {
 		window.addEventListener("keydown", (event) => {
-			if (event.keyCode === KEYS.LEFT || event.keyCode === KEYS.RIGHT) {
+			if (event.keyCode === KEYS.SPACE) {
+				this.platform.shot();//"Выстрел мяча"
+			} else if (event.keyCode === KEYS.LEFT || event.keyCode === KEYS.RIGHT) {
 				this.platform.start(event.keyCode);
 			}
 		});
@@ -69,8 +72,9 @@ let game = {
 		}
 	},
 
-	update() {//Текущее состояние платформы
+	update() {//Текущее состояние объектов
 		this.platform.move();
+		this.ball.move();
 	},
 
 	run() {//Запуск игры
@@ -107,10 +111,22 @@ let game = {
 };
 
 game.ball = {
+	speed: 3,//Возможная скорость движения мяча
+	dy: 0,//Смещение по оси у в данный момент времени
 	x: 310,
 	y: 280,
 	width: 20,
 	height: 20,
+
+	start() {
+		this.dy = -this.speed;
+	},
+
+	move() {
+		if (this.dy) {
+			this.y += this.dy;
+		}
+	},
 };
 
 game.platform = {
@@ -118,6 +134,7 @@ game.platform = {
 	dx: 0,//Смещение по оси х в данный момент времени
 	x: 270,
 	y: 300,
+	ball: game.ball,
 
 	start(direction) {
 		if (direction === KEYS.LEFT) {
@@ -134,7 +151,16 @@ game.platform = {
 	move() {
 		if (this.dx) {//Если платформа движется
 			this.x += this.dx;
-			game.ball.x += this.dx;
+			if (this.ball) {
+				this.ball.x += this.dx;
+			}
+		}
+	},
+
+	shot() {
+		if (this.ball) {//Запуск только если мяч на платформе
+			this.ball.start();//Начало движения мяча
+			this.ball = null;//После выстрела движение мяча и платформы независимо
 		}
 	},
 };
