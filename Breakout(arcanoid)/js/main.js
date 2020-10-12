@@ -67,6 +67,8 @@ let game = {
 		for (let row = 0; row < this.rows; row++) {
 			for (let col = 0; col < this.cols; col++) {
 				this.blocks.push({
+					width: 60,
+					height: 20,
 					x: 64 * col + 65,
 					y: 24 * row + 35,
 				});
@@ -77,6 +79,12 @@ let game = {
 	update() {//Текущее состояние объектов
 		this.platform.move();
 		this.ball.move();
+
+		for (let block of this.blocks) {
+			if (this.ball.collide(block)) {
+				this.ball.bumpBlock(block);
+			}
+		}
 	},
 
 	run() {//Запуск игры
@@ -141,6 +149,28 @@ game.ball = {
 		if (this.dx) {
 			this.x += this.dx;
 		}
+	},
+
+	collide(element) {//Проверка на столкновение мяча с блоками
+		let x = this.x + this.dx;
+		let y = this.y + this.dy;
+		/*Столкновение будет true при выполнении всех 4 условий
+		1) Начало координат по х + ширина шара > начала координат по х блока
+		2) Начало координат х шара < начала координат х блока + ширина блока
+		3) Начало координат по у + высота шара > начала координат по у блока
+		4) Начало координат по у шара < начала координат по у блока + высота блока*/
+		if (x + this.width > element.x &&
+			x < element.x + element.width &&
+			y + this.height > element.y &&
+			y < element.y + element.height) {
+			return true;
+		} else {
+			return false;
+		}
+	},
+
+	bumpBlock(block) {
+		this.dy *= -1;//Сменили направление мяча на противоположное
 	},
 };
 
