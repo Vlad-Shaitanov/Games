@@ -1,5 +1,10 @@
 "use strict";
 
+const KEYS = {
+	LEFT: 37,
+	RIGHT: 39,
+};
+
 let game = {
 	ctx: null,
 	platform: null,
@@ -23,17 +28,14 @@ let game = {
 
 	setEvents() {
 		window.addEventListener("keydown", (event) => {
-			switch (event.keyCode) {
-				case 37: this.platform.dx = -this.platform.speed;
-					break;
-				case 39: this.platform.dx = this.platform.speed;
-					break;
+			if (event.keyCode === KEYS.LEFT || event.keyCode === KEYS.RIGHT) {
+				this.platform.start(event.keyCode);
 			}
 		});
 
 		window.addEventListener("keyup", (event) => {
 			//При отпускании клавиши прекращаем движение платформы
-			this.platform.dx = 0;
+			this.platform.stop();
 		});
 	},
 
@@ -117,9 +119,22 @@ game.platform = {
 	x: 270,
 	y: 300,
 
+	start(direction) {
+		if (direction === KEYS.LEFT) {
+			this.dx = -this.speed;
+		} else if (direction === KEYS.RIGHT) {
+			this.dx = this.speed;
+		}
+	},
+
+	stop() {
+		this.dx = 0;
+	},
+
 	move() {
 		if (this.dx) {//Если платформа движется
 			this.x += this.dx;
+			game.ball.x += this.dx;
 		}
 	},
 };
