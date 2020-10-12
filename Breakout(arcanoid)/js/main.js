@@ -13,6 +13,8 @@ let game = {
 	blocks: [],
 	rows: 4,//Кол-во рядов с блоками
 	cols: 8,//Кол-во колонок с блоками
+	width: 640,//Ширина игрового поля
+	height: 360,//Высота игрового поля
 	sprites: {
 		background: null,
 		ball: null,
@@ -86,6 +88,9 @@ let game = {
 	},
 
 	render() {
+		//Очищаем канвас перед отрисовкой нового кадра
+		this.ctx.clearRect(0, 0, this.width, this.height);
+
 		this.ctx.drawImage(this.sprites.background, 0, 0);
 		this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width,
 			this.ball.height, this.ball.x, this.ball.y,
@@ -108,10 +113,16 @@ let game = {
 			this.run();
 		});
 	},
+
+	random(min, max) {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
+
 };
 
 game.ball = {
 	speed: 3,//Возможная скорость движения мяча
+	dx: 0,//Смещение по оси x в данный момент времени
 	dy: 0,//Смещение по оси у в данный момент времени
 	x: 310,
 	y: 280,
@@ -120,11 +131,15 @@ game.ball = {
 
 	start() {
 		this.dy = -this.speed;
+		this.dx = game.random(-this.speed, this.speed);
 	},
 
 	move() {
 		if (this.dy) {
 			this.y += this.dy;
+		}
+		if (this.dx) {
+			this.x += this.dx;
 		}
 	},
 };
