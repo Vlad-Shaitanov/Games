@@ -82,6 +82,7 @@ let game = {
 		this.ball.move();
 		this.collideBlocks();
 		this.collidePlatform();
+		this.ball.collideWorldBorders();
 	},
 
 	collideBlocks() {
@@ -183,6 +184,34 @@ game.ball = {
 		}
 	},
 
+	collideWorldBorders() {//Проверка на столкновение мяча с границами мира
+		let x = this.x + this.dx;
+		let y = this.y + this.dy;
+
+		let ballLeft = x,
+			ballRight = ballLeft + this.width,
+			ballTop = y,
+			ballBottom = ballTop + this.height;
+
+		let worldLeft = 0,
+			worldRight = game.width,
+			worldTop = 0,
+			worldBottom = game.height;
+
+		if (ballLeft < worldLeft) {
+			this.x = 0;
+			this.dx = this.speed;
+		} else if (ballRight > worldRight) {
+			this.x = worldRight - this.width;
+			this.dx = -this.speed;
+		} else if (ballTop < worldTop) {
+			this.y = 0;
+			this.dy = this.speed;
+		} else if (ballBottom > worldBottom) {
+			alert("game over");
+		}
+	},
+
 	bumpBlock(block) {
 		this.dy *= -1;//Сменили направление мяча на противоположное
 		//После столкновения блок не будет отрисовываться на следующем кадре
@@ -190,7 +219,12 @@ game.ball = {
 	},
 
 	bumpPlatform(platform) {
-		this.dy *= -1;//Сменили направление мяча на противоположное
+		if (this.dy < 0) {//Если вертикального смещения нет, прервать
+			return;
+		}
+		/*Сменили направление мяча на противоположное. Принудительно ставим
+		отрицательное значение speed, чтобы мяч отскакивал только вверх*/
+		this.dy = -this.speed;
 		let touchX = this.x + this.width / 2;//Точка касания мяча с платформой
 		this.dx = this.speed * platform.getTouchOffset(touchX);
 	},
