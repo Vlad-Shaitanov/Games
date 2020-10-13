@@ -79,11 +79,21 @@ let game = {
 	update() {//Текущее состояние объектов
 		this.platform.move();
 		this.ball.move();
+		this.collideBlocks();
+		this.collidePlatform();
+	},
 
+	collideBlocks() {
 		for (let block of this.blocks) {
 			if (this.ball.collide(block)) {
 				this.ball.bumpBlock(block);
 			}
+		}
+	},
+
+	collidePlatform() {
+		if (this.ball.collide(this.platform)) {
+			this.ball.bumpPlatform(this.platform);
 		}
 	},
 
@@ -172,6 +182,12 @@ game.ball = {
 	bumpBlock(block) {
 		this.dy *= -1;//Сменили направление мяча на противоположное
 	},
+
+	bumpPlatform(platform) {
+		this.dy *= -1;//Сменили направление мяча на противоположное
+		let touchX = this.x + this.width / 2;//Точка касания мяча с платформой
+		this.dx = this.speed * platform.getTouchOffset(touchX);
+	},
 };
 
 game.platform = {
@@ -179,6 +195,8 @@ game.platform = {
 	dx: 0,//Смещение по оси х в данный момент времени
 	x: 270,
 	y: 300,
+	width: 100,
+	height: 14,
 	ball: game.ball,
 
 	start(direction) {
@@ -207,6 +225,21 @@ game.platform = {
 			this.ball.start();//Начало движения мяча
 			this.ball = null;//После выстрела движение мяча и платформы независимо
 		}
+	},
+
+	getTouchOffset(x) {
+		/*Условно разделим платформу на 2 половины. Левая половина будет иметь
+		значение от -1 (левый край платформы)до 0 (середина), а правая половина
+		примет значение от 0 (середина) до 1 (правый край платформы)*/
+		/*Координата правой стороны платформы минус координата касания мяча с
+		платформой*/
+		let diff = (this.x + this.width) - x;
+		/*Вычтем полученную разницу из полной ширины платформы и получим
+		точку касания мяча относительно левого края платформы*/
+		let offset = this.width - diff;
+		let result = 2 * offset / this.width;
+
+		return result - 1;
 	},
 };
 
