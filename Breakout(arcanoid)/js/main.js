@@ -83,6 +83,7 @@ let game = {
 		this.collideBlocks();
 		this.collidePlatform();
 		this.ball.collideWorldBorders();
+		this.platform.collideWorldBorders();
 	},
 
 	collideBlocks() {
@@ -219,6 +220,9 @@ game.ball = {
 	},
 
 	bumpPlatform(platform) {
+		if (platform.dx) {
+			this.x += platform.dx;//Ограничение наезда платформы на мяч
+		}
 		if (this.dy < 0) {//Если вертикального смещения нет, прервать
 			return;
 		}
@@ -280,6 +284,24 @@ game.platform = {
 		let result = 2 * offset / this.width;
 
 		return result - 1;
+	},
+
+	collideWorldBorders() {
+		let x = this.x + this.dx;
+
+		let platformLeft = x,
+			platformRight = platformLeft + this.width;
+
+		let worldLeft = 0,
+			worldRight = game.width;
+
+		if (platformLeft < worldLeft) {
+			this.x = 0;
+		} else if (platformRight > worldRight) {
+			this.x = worldRight - this.width;
+		}
+		//?(platformLeft < worldLeft || platformRight > worldRight){
+		//?this.dx = 0}
 	},
 };
 
