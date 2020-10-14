@@ -15,6 +15,7 @@ let game = {
 	cols: 8,//Кол-во колонок с блоками
 	width: 640,//Ширина игрового поля
 	height: 360,//Высота игрового поля
+	active: true,//Состояние игры по умолчанию
 	sprites: {
 		background: null,
 		ball: null,
@@ -102,11 +103,14 @@ let game = {
 	},
 
 	run() {//Запуск игры
-		window.requestAnimationFrame(() => {
-			this.update();
-			this.render();
-			this.run();//Рекурсия для динамической отрисовки платформы
-		});
+		if (this.active) {//Только если игра активна
+			window.requestAnimationFrame(() => {
+				this.update();
+				this.render();
+				this.run();//Рекурсия для динамической отрисовки платформы
+			});
+		}
+
 	},
 
 	render() {
@@ -209,7 +213,9 @@ game.ball = {
 			this.y = 0;
 			this.dy = this.speed;
 		} else if (ballBottom > worldBottom) {
-			alert("game over");
+			game.active = false;//Остановка игры
+			alert("Конец игры!");//Сообщение о поражении
+			window.location.reload();//Перезапуск игры
 		}
 	},
 
