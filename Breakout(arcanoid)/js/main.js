@@ -31,7 +31,13 @@ let game = {
 		//Инициализация
 		this.canvas = document.querySelector("#canvas");
 		this.ctx = this.canvas.getContext("2d");
+		this.setTextFont();
 		this.setEvents();
+	},
+
+	setTextFont() {
+		this.ctx.fillStyle = "#fff";
+		this.ctx.font = "20px Arial";
 	},
 
 	setEvents() {
@@ -152,6 +158,8 @@ let game = {
 			this.ball.width, this.ball.height);//Отрисовка 1 кадра из спрайта
 		this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
 		this.renderBlocks();
+
+		this.ctx.fillText(`Score: ${this.score}`, 20, 20);//Блок с очками игрока
 	},
 
 	renderBlocks() {
