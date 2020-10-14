@@ -153,7 +153,8 @@ let game = {
 		this.ctx.clearRect(0, 0, this.width, this.height);
 
 		this.ctx.drawImage(this.sprites.background, 0, 0);
-		this.ctx.drawImage(this.sprites.ball, 0, 0, this.ball.width,
+		this.ctx.drawImage(this.sprites.ball,
+			this.ball.frame * this.ball.width, 0, this.ball.width,
 			this.ball.height, this.ball.x, this.ball.y,
 			this.ball.width, this.ball.height);//Отрисовка 1 кадра из спрайта
 		this.ctx.drawImage(this.sprites.platform, this.platform.x, this.platform.y);
@@ -192,6 +193,7 @@ let game = {
 };
 
 game.ball = {
+	frame: 0,//Текущий кадр мяча
 	speed: 3,//Возможная скорость движения мяча
 	dx: 0,//Смещение по оси x в данный момент времени
 	dy: 0,//Смещение по оси у в данный момент времени
@@ -203,6 +205,16 @@ game.ball = {
 	start() {
 		this.dy = -this.speed;
 		this.dx = game.random(-this.speed, this.speed);
+		this.animate();
+	},
+
+	animate() {
+		setInterval(() => {//Смена кадров спрайтшита мяча
+			++this.frame;
+			if (this.frame > 4) {
+				this.frame = 0;
+			}
+		}, 100);
 	},
 
 	move() {
