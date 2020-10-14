@@ -11,6 +11,7 @@ let game = {
 	platform: null,
 	ball: null,
 	blocks: [],
+	score: 0,//Счетчик уничтоженных блоков
 	rows: 4,//Кол-во рядов с блоками
 	cols: 8,//Кол-во колонок с блоками
 	width: 640,//Ширина игрового поля
@@ -87,11 +88,19 @@ let game = {
 		this.platform.collideWorldBorders();
 	},
 
+	addScore() {
+		++this.score;//Увеличиваем счетчик при каждом уничтожении блока
+		if (this.score >= this.blocks.length) {
+			this.end("Победа!");
+		}
+	},
+
 	collideBlocks() {
 		for (let block of this.blocks) {
 			if (block.active && this.ball.collide(block)) {
 				//Проверка на столкновение только если блок существует
 				this.ball.bumpBlock(block);
+				this.addScore();
 			}
 		}
 	},
@@ -140,6 +149,12 @@ let game = {
 			//По факту загрузки preload, будет запущен метод run
 			this.run();
 		});
+	},
+
+	end(message) {//Завершение игры
+		this.active = false;//Остановка игры
+		alert(message);//Сообщение о поражении
+		window.location.reload();//Перезапуск игры
 	},
 
 	random(min, max) {
@@ -213,9 +228,7 @@ game.ball = {
 			this.y = 0;
 			this.dy = this.speed;
 		} else if (ballBottom > worldBottom) {
-			game.active = false;//Остановка игры
-			alert("Конец игры!");//Сообщение о поражении
-			window.location.reload();//Перезапуск игры
+			game.end("Вы проиграли");
 		}
 	},
 
