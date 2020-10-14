@@ -17,6 +17,9 @@ let game = {
 	width: 640,//Ширина игрового поля
 	height: 360,//Высота игрового поля
 	active: true,//Состояние игры по умолчанию
+	sounds: {
+		bump: null,
+	},
 	sprites: {
 		background: null,
 		ball: null,
@@ -50,18 +53,33 @@ let game = {
 		//Предзагрузка файлов
 		let loaded = 0;
 		let required = Object.keys(this.sprites).length;
+		required += Object.keys(this.sounds).length;
 
-		let onImageLoad = () => {
+		let onResourceLoad = () => {
 			++loaded;
 			if (loaded >= required) {
 				callback();
 			}
 		};
 
+		this.preloadSprites(onResourceLoad);
+		this.preloadSounds(onResourceLoad);
+	},
+
+	preloadSprites(onResourceLoad) {
 		for (let key in this.sprites) {
 			this.sprites[key] = new Image();
 			this.sprites[key].src = `img/${key}.png`;
-			this.sprites[key].addEventListener("load", onImageLoad);
+			this.sprites[key].addEventListener("load", onResourceLoad);
+		}
+
+	},
+	preloadSounds(onResourceLoad) {
+		for (let key in this.sounds) {
+			this.sounds[key] = new Audio();
+			this.sounds[key].src = `sounds/${key}.mp3`;
+			this.sounds[key].addEventListener("canplaythrough",
+				onResourceLoad, { once: true });
 		}
 	},
 
@@ -101,6 +119,7 @@ let game = {
 				//Проверка на столкновение только если блок существует
 				this.ball.bumpBlock(block);
 				this.addScore();
+				this.sounds.bump.play();//Звук при столкновении
 			}
 		}
 	},
@@ -108,6 +127,7 @@ let game = {
 	collidePlatform() {
 		if (this.ball.collide(this.platform)) {
 			this.ball.bumpPlatform(this.platform);
+			this.sounds.bump.play();//Звук при столкновении
 		}
 	},
 
@@ -221,12 +241,15 @@ game.ball = {
 		if (ballLeft < worldLeft) {
 			this.x = 0;
 			this.dx = this.speed;
+			game.sounds.bump.play();//Звук при столкновении
 		} else if (ballRight > worldRight) {
 			this.x = worldRight - this.width;
 			this.dx = -this.speed;
+			game.sounds.bump.play();//Звук при столкновении
 		} else if (ballTop < worldTop) {
 			this.y = 0;
 			this.dy = this.speed;
+			game.sounds.bump.play();//Звук при столкновении
 		} else if (ballBottom > worldBottom) {
 			game.end("Вы проиграли");
 		}
