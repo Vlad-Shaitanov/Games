@@ -13,9 +13,11 @@ body {
     font-size: 15px;
     color: #fff;
 }
-img{
+
+img {
     display: block;
     width: 100%;
+    max-width: 500px;
 }
 
 .main-title {
@@ -29,20 +31,21 @@ img{
 }
 
 .game-field {
-    max-width: 620px;
-    max-height: 700px;
+    min-width: 620px;
+    min-height: 700px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border-radius: 20px;
     background-color: #1D7373;
 }
 
-.game-header{
+.game-header {
     margin: 20px auto;
 }
 
-.action-btn{
+.action-btn {
     margin: 20px auto;
     padding: 12px 24px;
     background-color: #FF4040;
@@ -52,10 +55,30 @@ img{
     border-radius: 10px
 }
 
-.action-btn:focus{
+.action-btn:focus {
     outline: none;
 }
 
-.action-btn:hover{
+.action-btn:hover {
     padding: 12px 40px;
+}
+
+.card.open {
+    transform: translateY(0);
+}
+
+.card {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+    background-color: #1D7373;
+    background-image: url("img/background.jpg");
+    background-size: cover;
+    transition: transform 0.5s, background-image 0.5s;
+    transform: translateY(180deg);
+
+}
+
+.row {
+    display: flex;
 }
