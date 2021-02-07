@@ -22,15 +22,48 @@ const LOGOs = [
 ];
 
 const BACKGROUND = "background.jpg";
-const gameSettings = { //Игровые настройки
+let gameSettings = { //Начальные игровые настройки
     width: 4,
-    height: 6,
+    height: 3,
 }
 
 let checkedCard = null; //Карточка, по которой кникнул игрок
 let cardsCount = null; //Счетчик карточек
 let isBlocked = false;
-let timer = null;
+let timer = null;//Сообщение о победе
+let timerReload = null;//Таймер обновления страницы при выигрыше
+
+const selectSettings = document.querySelector("#select-table");
+selectSettings.addEventListener("change", (event) => {
+    const target = event.target.value;
+
+    //Установка размеров игрового поля
+    switch (target) {
+        case "12":
+            gameSettings = {
+                width: 4,
+                height: 3,
+            }
+            break;
+        case "16":
+            gameSettings = {
+                width: 4,
+                height: 4,
+            }
+            break;
+        case "20":
+            gameSettings = {
+                width: 4,
+                height: 5,
+            }
+            break;
+       case "24":
+            gameSettings = {
+                width: 4,
+                height: 6,
+            }
+    }
+});
 
 const gameField = document.querySelector("#game-field");
 
@@ -42,7 +75,7 @@ const gameHeader = document.querySelector(".game-header");
 gameHeader.after(banner);
 
 const handleCardClick = (event) => {
-    window.clearTimeout(timer);//Сброс таймера
+    window.clearTimeout(timer, timerReload); //Сброс таймера
     if (!isBlocked) {
         const target = event.target;
         const bg = target.dataset.bg;
@@ -73,9 +106,13 @@ const handleCardClick = (event) => {
                 }, 600);
             }
         }
-        timer = setTimeout(()=>{
-            if(cardsCount === 0){
+        timer = setTimeout(() => {
+            if (cardsCount === 0) {
                 gameField.innerHTML = "<h2>Вы выиграли!</h2>";
+                
+                timerReload = setTimeout(()=>{
+                    window.location.reload();
+                }, 3000);
             }
         }, 600);
     }
@@ -112,7 +149,7 @@ const startButtonClick = () => {
     }
 
     cardsBackgrounds.sort(() => Math.random() - 0.5); //Сортировка случайным образом
-   
+
 
     let iterator = 0;
     //Создаем сетку из карточек на поле
