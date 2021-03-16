@@ -5,6 +5,10 @@ const area = document.querySelector("#area");
 //Какой ход
 let move = 0;
 let result = "";
+const contentWrapper = document.querySelector("#content");
+const modalResult = document.querySelector("#modal-result-wrapper");
+const overlay = document.querySelector("#overlay");
+const btnClose = document.querySelector("#btn-close");
 
 
 
@@ -60,5 +64,19 @@ const check = () => {//ПРоверка на наличие победителя
 };
 
 const prepareResult = winner => {
-	console.log(winner);
+	contentWrapper.innerHTML = `Победили ${winner}!`;
+	//Показываем модалку
+	modalResult.style.display = "block";
 };
+
+const closeModal = () => {
+	//Скрываем модалку
+	modalResult.style.display = "none";
+	//Обновление страницы
+	location.reload();
+};
+
+//Закрываем модалку при клике на оверлей
+overlay.addEventListener("click", closeModal);
+//Закрываем модалку при клике на кнопку
+btnClose.addEventListener("click", closeModal);

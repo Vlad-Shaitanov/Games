@@ -54,3 +54,57 @@ body{
 	justify-content: center;
 	align-items: center;
 }
+
+#modal-result-wrapper{
+	width: 100%;
+	height: 100%;
+	/*position: relative;*/
+	top: 0;
+	left: 0;
+	display: none;
+}
+
+#overlay{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+}
+
+#modal-window{
+	width: 300px;
+	height: 300px;
+	border: 1px solid #000;
+	background-color: #fff;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	flex-flow: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#btn-close{
+	width: 150px;
+	height: 50px;
+	background-color: tomato;
+	color: black;
+	text-align: center;
+	padding-top: 15px;
+	cursor: pointer;
+	
+	margin-bottom: 10px;
+}
+
+#btn-close:hover{
+	border-radius: 50%;
+}
+
+#content{
+	padding-top: 45%;
+	font-size: 25px;
+}
